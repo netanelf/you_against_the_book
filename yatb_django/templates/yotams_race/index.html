@@ -5,27 +5,165 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" media="screen">
-    <link href="{% static 'css/bootstrap-toggle.css' %}" rel="stylesheet" media="screen">
-    <link rel="icon" type="image/png"href="{% static 'pics/favicon.png' %}">
+    <link href="{% static 'css/bootstrap-select.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'css/star-rating.css' %}" rel="stylesheet" media="screen">
     <title>{% block title%} Yotam's Race {% endblock%}</title>
 
     <style>
-      .bold {
-        font-weight: bold;
-      }
+        .bold {
+            font-weight: bold;
+        }
 
-      .indent {
-        margin-left: 1.5em;
-      }
+        .indent {
+            margin-left: 1.5em;
+        }
+
+        .col-container {
+            display: flex;
+            width: 100%;
+        }
+        .col {
+            flex: 1;
+            padding: 16px;
+        }
+        .bg-light-gray   { background-color: #d0d3d4  }
+        .bg-gray   { background-color: #AAAAAA }
+        .bg-silver { background-color: #DDDDDD }
+        .bg-purple { background-color: #a569bd  }
+
     </style>
 </head>
 
 {% block body_block %}
 <body>
-    {{ completed_percent }}
-    <script src="{% static 'js/jquery-2.1.4.js' %}"></script>
-    <script src="{% static 'js/bootstrap-toggle.js' %}"></script>
+    <!-- percent completed div-->
+    <div class="container bg-light-gray">
+        <div class="row form-group bg-purple">
+            <div class="col-lg-12">
+                <h1 style=font-size:50px align="center">{{ completed_percent.percent| floatformat:1}}% Completed ({{completed_percent.number_of_made_recipes}}/ {{completed_percent.number_of_recipes}})</h1>
+            </div>
+        </div>
+
+
+        <!-- top 10 div-->
+        <div class="row form-group bg-gray">
+            <div class="col-lg-12">
+                <h1 align="center">Top 10</h1>
+            </div>
+        </div>
+        <div class="row form-group bg-silver">
+            <div class="col-lg-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-md-8">Name</th>
+                            <th class="col-md-2"># Makes</th>
+                            <th class="col-md-2">Rank</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for r in top_10 %}
+                        <tr>
+                            <td class="col-md-8">{{r.name}}</td>
+                            <td class="col-md-2">{{r.num_makings}}</td>
+                            <td class="col-md-2">{{r.average_rank|floatformat:2}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <!-- add done recipe div-->
+        <div class="row form-group bg-gray">
+            <div class="col-lg-12">
+                <h1 align="center">Report a making of a recipe</h1>
+            </div>
+        </div>
+        <div class="row form-group bg-sliver">
+            <div class="col-lg-5">
+                <h3>Choose a recipe from this list:</h3>
+            </div>
+            <div class="col-lg-5">
+                <select class="selectpicker" data-live-search="true" id="recipes_chooser">
+                    <option data-tokens="" selected>Please select</option>
+                    {% for r in full_recipes_list %}
+                        <option>{{r}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-5">
+                <input id="rating_input" name="rating_input" class="rating rating-loading" data-show-clear="false" data-show-caption="false">
+            </div>
+            <div class="col-lg-5">
+                <input id="making_date" name="date" type="date" value={{todays_date}} />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-12">
+                <button type="button" class="btn btn-secondary" id="add_done_recipe">Add Done Recipe</button>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-12">
+                <div class="alert alert-success" id="success-alert">
+                    <strong>Success! </strong> Recipe added successfully
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+        <!-- get random recipe div-->
+        <div class="row form-group">
+            <div class="col-lg-12">
+                <dl class="row bg-gray">
+                    <h1 align="center">Random recipe</h1>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <button type="button" class="btn btn-secondary" id="get_rand_recipe">Get random recipe</button>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="random_only_unmade">
+                                <label class="custom-control-label" for="random_only_unmade">Only not made</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-10">Name</th>
+                                    <th class="col-md-2">Page</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td id="random_recipe_name" class="col-md-10"></td>
+                                    <td id="random_recipe_page_num" class="col-md-2"></td>
+                                </tr>
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </dl>
+        </div>
+
+    </div>
+
+
+    <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+    <script src="{% static 'js/bootstrap-select.js' %}"></script>
+    <script src="{% static 'js/star-rating.js' %}"></script>
 
 </body>
 {% endblock %}
