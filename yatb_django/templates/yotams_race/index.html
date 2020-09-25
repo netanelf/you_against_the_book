@@ -26,16 +26,30 @@
             flex: 1;
             padding: 16px;
         }
-        .bg-light-gray   { background-color: #d0d3d4  }
-        .bg-gray   { background-color: #AAAAAA }
-        .bg-silver { background-color: #DDDDDD }
-        .bg-purple { background-color: #a569bd  }
 
+        .bg-light-gray   { background-color: rgba(208, 211, 212, 0.9)  }
+        .bg-gray   { background-color: rgba(170, 170, 170, 0.9) }
+        .bg-silver { background-color: rgba(221, 221, 221, 0.7) }
+        .bg-purple { background-color: rgba(165, 105, 189, 0.7) }
+
+        body, html {
+            height: 100%;
+        }
+        .bg {
+            /* The image used */
+            background-image: url("{% static "images/plenty_bg.jpg" %}");
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            background-size: cover;
+            -o-background-size: cover;
+        }
     </style>
 </head>
 
 {% block body_block %}
 <body>
+    <div class="bg">
+
     <!-- percent completed div-->
     <div class="container bg-light-gray">
         <div class="row form-group bg-purple">
@@ -83,10 +97,11 @@
             </div>
         </div>
         <div class="row bg-silver">
-            <div class="col-lg-5">
-                <h4>Choose a recipe from this list:</h4>
+            <br>
+            <div class="col-lg-3">
+                <h4>Choose a recipe from this list</h4>
             </div>
-            <div class="col-lg-7">
+            <div class="col-lg-9">
                 <select class="selectpicker" data-live-search="true" id="recipes_chooser" data-width="auto">
                     <option data-tokens="" selected>Please select</option>
                     {% for r in full_recipes_list %}
@@ -96,16 +111,26 @@
             </div>
         </div>
         <div class="row bg-silver">
-            <div class="col-lg-5">
+            <div class="col-lg-3">
+                <h4>Rate the recipe</h4>
+            </div>
+            <div class="col-lg-9">
                 <input id="rating_input" name="rating_input" class="rating rating-loading" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1">
             </div>
-            <div class="col-lg-5">
+        </div>
+        <div class="row bg-silver">
+            <div class="col-lg-3">
+                <h4>Choose making date</h4>
+            </div>
+            <div class="col-lg-9">
                 <input id="making_date" name="date" type="date" value={{todays_date}} />
             </div>
         </div>
         <div class="row bg-silver">
             <div class="col-lg-12 text-center">
                 <button type="button" class="btn btn-secondary" id="add_done_recipe">Add done recipe</button>
+                <br>
+                <br>
             </div>
         </div>
         <div class="row form-group">
@@ -124,6 +149,7 @@
             </div>
         </div>
         <div class="row bg-silver"> <!-- buttons-->
+            <br>
             <div class="col-lg-2">
                 <button type="button" class="btn btn-secondary" id="get_rand_recipe">Get random recipe</button>
             </div>
@@ -158,6 +184,7 @@
         <div class="row form-group bg-gray">
             <div class="col-lg-12">
                 <address>
+                    <br>
                     <strong>Netanel Freiman, 2020</strong>
                     <br>
                     2020
@@ -167,7 +194,7 @@
         </div>
     </div>
 
-
+    </div>
     <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'js/index.js' %}"></script>
