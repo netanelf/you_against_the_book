@@ -7,7 +7,7 @@ django.setup()
 from yotams_race.models import Recipe, Making
 
 
-RECIPES_FILE_PATH = r'/home/netanel/workspace/you_against_the_book/yatb_django/recipes.csv'
+RECIPES_FILE_PATH = r'recipes.csv'
 
 
 def populate_recipes():
