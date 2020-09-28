@@ -20,7 +20,7 @@ def get_completion_data():
 
 
 def get_top_10_recipes():
-    makings = Recipe.objects.annotate(num_makings=Count('making'), avg_rank=Avg('making__score')).order_by('-num_makings')
+    makings = Recipe.objects.annotate(num_makings=Count('making'), avg_rank=Avg('making__score')).order_by('-num_makings', '-avg_rank')
     top_10 = makings[:10]
     data = [{'name': v.name, 'num_makings': v.num_makings, 'average_rank': v.avg_rank} for v in top_10]
     return data

@@ -113,6 +113,15 @@ def populate_makings():
     m.save()
 
 
+    r = Recipe.objects.get(name='Gado-gado')
+    m = Making(
+        recipe=r,
+        timestamp=datetime(2020,10,28,12,0,0),
+        score=4.3
+    )
+    m.save()
+
+
 def clear_db():
     Making.objects.all().delete()
     Recipe.objects.all().delete()
