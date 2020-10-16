@@ -21,6 +21,10 @@ function updateRandomRecipe(event, data){
         c.innerHTML = recipe.name;
         var c = document.getElementById("random_recipe_page_num");
         c.innerHTML = recipe.page;
+        var c = document.getElementById("random_recipe_rank");
+        c.innerHTML = recipe.rank;
+        var c = document.getElementById("random_recipe_effort");
+        c.innerHTML = recipe.effort;
     }
 
     var only_unmade = document.getElementById("random_only_unmade").checked;

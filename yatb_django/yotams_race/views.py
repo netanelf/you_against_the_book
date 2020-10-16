@@ -71,8 +71,20 @@ def get_random_recipe(request):
             else:
                 print(f'recipe {random_recipe.name} was already made, choosing another one')
 
+    try:
+        makings = Recipe.objects\
+        .filter(name=random_recipe.name)\
+        .annotate(num_makings=Count('making'), avg_rank=Avg('making__score'), avg_effort=Avg('making__effort'))
+        avg_rank = makings[0].avg_rank
+        avg_effort = makings[0].avg_effort
+    except Exception as ex:
+        avg_rank = 'NA'
+        avg_effort = 'NA'
+
     data = {'name': random_recipe.name,
-            'page': random_recipe.page_num}
+            'page': random_recipe.page_num,
+            'rank': avg_rank,
+            'effort': avg_effort}
     return HttpResponse(json.dumps(data))
 
 

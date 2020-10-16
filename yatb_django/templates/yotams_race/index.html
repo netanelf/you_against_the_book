@@ -70,18 +70,20 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="col-md-8">Name</th>
+                            <th class="col-md-6">Name</th>
                             <th class="col-md-2"># Makes</th>
                             <th class="col-md-2">Rank</th>
+                            <th class="col-md-2">Effort</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {% for r in top_10 %}
                         <tr>
-                            <td class="col-md-8">{{r.name}}</td>
+                            <td class="col-md-6">{{r.name}}</td>
                             <td class="col-md-2">{{r.num_makings}}</td>
                             <td class="col-md-2">{{r.average_rank|floatformat:2}}</td>
+                            <td class="col-md-2">{{r.average_effort|floatformat:2}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -173,15 +175,19 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="col-md-10">Name</th>
+                            <th class="col-md-6">Name</th>
                             <th class="col-md-2">Page</th>
+                            <th class="col-md-2">Rank</th>
+                            <th class="col-md-2">Effort</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr>
-                            <td id="random_recipe_name" class="col-md-10"></td>
+                            <td id="random_recipe_name" class="col-md-6"></td>
                             <td id="random_recipe_page_num" class="col-md-2"></td>
+                            <td id="random_recipe_rank" class="col-md-2"></td>
+                            <td id="random_recipe_effort" class="col-md-2"></td>
                         </tr>
                     </tbody>
                 </table>
