@@ -13,3 +13,4 @@ class Making(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     timestamp = models.DateTimeField()
     score = models.FloatField(validators=[MaxValueValidator(5), MinValueValidator(0)])
+    effort = models.FloatField(validators=[MaxValueValidator(5), MinValueValidator(0)], null=True)

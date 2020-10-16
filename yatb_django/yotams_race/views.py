@@ -20,9 +20,14 @@ def get_completion_data():
 
 
 def get_top_10_recipes():
-    makings = Recipe.objects.annotate(num_makings=Count('making'), avg_rank=Avg('making__score')).order_by('-num_makings', '-avg_rank')
+    makings = Recipe.objects.annotate(num_makings=Count('making'),
+                                      avg_rank=Avg('making__score'),
+                                      avg_effort=Avg('making__effort')).order_by('-num_makings', '-avg_rank', '-avg_effort')
     top_10 = makings[:10]
-    data = [{'name': v.name, 'num_makings': v.num_makings, 'average_rank': v.avg_rank} for v in top_10]
+    data = [{'name': v.name,
+             'num_makings': v.num_makings,
+             'average_rank': v.avg_rank,
+             'average_effort': v.avg_effort} for v in top_10]
     return data
 
 
@@ -79,7 +84,9 @@ def add_new_making(request):
     print(f'{k}')
     r = Recipe.objects.get(name=data[0])
     timestamp = datetime.strptime(data[1] + ' 12:00:00', '%Y-%m-%d %H:%M:%S')
-    making = Making(recipe=r, timestamp=timestamp, score=float(data[2]))
+    score = float(data[2])
+    effort = float(data[3])
+    making = Making(recipe=r, timestamp=timestamp, score=score, effort=effort)
     making.save()
     return HttpResponse(json.dumps({'no_data': None}))
 

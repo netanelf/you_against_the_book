@@ -40,6 +40,7 @@ function addDoneRecipe(event, data){
     var recipe_name_e = document.getElementById('recipes_chooser');
     var recipe_making_date_e = document.getElementById('making_date');
     var recipe_rating_e = document.getElementById("rating_input")
+    var recipe_effort_e = document.getElementById("effort_input")
 
     function onDataReceived(){
         console.log('updated site with new making');
@@ -50,7 +51,7 @@ function addDoneRecipe(event, data){
         url: 'add_new_making/',
         type: 'GET',
         dataType: 'json',
-        data: JSON.stringify([recipe_name_e.value, recipe_making_date_e.value, recipe_rating_e.value], null, 2),
+        data: JSON.stringify([recipe_name_e.value, recipe_making_date_e.value, recipe_rating_e.value, recipe_effort_e.value], null, 2),
         success: onDataReceived
     });
 }
