@@ -51,6 +51,25 @@ def index(request):
     return render(request, 'yotams_race/index.html', data)
 
 
+def full_making_table(request):
+    making = Making.objects.all()
+    makings_list = []
+    for m in making:
+        makings_list.append({
+            'name': m.recipe.name,
+            'page': m.recipe.page_num,
+            'rank': m.score,
+            'effort': m.effort,
+            'date': m.timestamp
+        })
+
+    data = \
+        {
+            'all_makings': makings_list
+        }
+    return render(request, 'yotams_race/full_making_table.html', data)
+
+
 def get_random_recipe(request):
 
     a = request.GET.keys()

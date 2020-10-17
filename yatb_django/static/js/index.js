@@ -13,6 +13,10 @@ $(document).ready(function() {
     $("#success-alert").hide();
 });
 
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
 
 function updateRandomRecipe(event, data){
     function onDataReceived(recipe){
