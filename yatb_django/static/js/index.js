@@ -11,6 +11,7 @@ window.onload = function(){
 
 $(document).ready(function() {
     $("#success-alert").hide();
+    $("#error-alert").hide();
 });
 
 $(function () {
@@ -52,7 +53,15 @@ function addDoneRecipe(event, data){
 
     function onDataReceived(){
         console.log('updated site with new making');
+        $('#recipes_chooser').selectpicker('val', 'Please select');
+        $("#rating_input").rating("clear");
+        $("#effort_input").rating("clear");
         showAlert();
+    }
+
+    function onErrorReceived(){
+        console.error('site could not be updated, check data');
+        showErrorAlert();
     }
 
     $.ajax({
@@ -60,7 +69,8 @@ function addDoneRecipe(event, data){
         type: 'GET',
         dataType: 'json',
         data: JSON.stringify([recipe_name_e.value, recipe_making_date_e.value, recipe_rating_e.value, recipe_effort_e.value], null, 2),
-        success: onDataReceived
+        success: onDataReceived,
+        error: onErrorReceived
     });
 }
 
@@ -68,6 +78,12 @@ function addDoneRecipe(event, data){
 function showAlert() {
     $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
         $("#success-alert").slideUp(500);
+        });
+}
+
+function showErrorAlert(){
+    $("#error-alert").fadeTo(2000, 500).slideUp(1000, function() {
+        $("#error-alert").slideUp(1000);
         });
 }
 

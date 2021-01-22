@@ -1,14 +1,25 @@
 from django.shortcuts import render
 from django.db.models import Count, Avg
 from django.db.models import Max, Min
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse_lazy
+from bootstrap_modal_forms.generic import BSModalCreateView
 from datetime import date, datetime
 import json
 import random
 
 from yotams_race.models import *
+from yotams_race.forms import EditMakingForm
 
 # Create your views here.
+
+
+class EditMakingView(BSModalCreateView):
+    print('in EditMakingView')
+    template_name = 'edit_making.html'
+    form_class = EditMakingForm
+    success_message = 'Making was edited successfully'
+    success_url = reverse_lazy('index')
 
 
 def get_completion_data():
@@ -60,7 +71,8 @@ def full_making_table(request):
             'page': m.recipe.page_num,
             'rank': m.score,
             'effort': m.effort,
-            'date': m.timestamp
+            'date': m.timestamp,
+            'id': m.id
         })
 
     data = \
