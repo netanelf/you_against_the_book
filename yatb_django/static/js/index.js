@@ -6,6 +6,19 @@ window.onload = function(){
     var add_done_recipe = document.getElementById('add_done_recipe');
     add_done_recipe.onclick = addDoneRecipe;
 
+
+    $('#modal').on('show.bs.modal', function (event) {
+        var modal = $(this)
+        $.ajax({
+            //url: 'get_comments/3',
+            url: generete_comment_url(3),
+            context: document.body,
+            //data: JSON.stringify(['only_unmade', only_unmade], null, 2),
+        }).done(function(response) {
+            modal.html(response);
+        });
+    })
+
 }
 
 
@@ -49,6 +62,7 @@ function addDoneRecipe(event, data){
     var recipe_making_date_e = document.getElementById('making_date');
     var recipe_rating_e = document.getElementById("rating_input")
     var recipe_effort_e = document.getElementById("effort_input")
+    var recipe_comments_e = document.getElementById("making_comment")
 
     function onDataReceived(){
         console.log('updated site with new making');
@@ -59,7 +73,12 @@ function addDoneRecipe(event, data){
         url: 'add_new_making/',
         type: 'GET',
         dataType: 'json',
-        data: JSON.stringify([recipe_name_e.value, recipe_making_date_e.value, recipe_rating_e.value, recipe_effort_e.value], null, 2),
+        data: JSON.stringify([recipe_name_e.value,
+                              recipe_making_date_e.value,
+                              recipe_rating_e.value,
+                              recipe_effort_e.value,
+                              recipe_comments_e.value],
+                              null, 2),
         success: onDataReceived
     });
 }

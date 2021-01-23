@@ -74,6 +74,7 @@
                             <th class="col-md-2"># Makes</th>
                             <th class="col-md-2">Rank</th>
                             <th class="col-md-2">Effort</th>
+                            <th class="col-md-2">Comments</th>
                         </tr>
                     </thead>
 
@@ -84,6 +85,9 @@
                             <td class="col-md-2">{{r.num_makings}}</td>
                             <td class="col-md-2">{{r.average_rank|floatformat:2}}</td>
                             <td class="col-md-2">{{r.average_effort|floatformat:2}}</td>
+                            <td class="col-md-2">
+                                <p>Click <a data-toggle="modal" data-target="#modal" href="{% url 'get_comments' recipe_id=r.id %}">here</a> to show the modal</p>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -91,6 +95,8 @@
             </div>
         </div>
 
+        {% comment %}3 - The modal container{% endcomment %}
+        <div class="modal fade" id="modal"></div>
 
         <!-- add done recipe div-->
         <div class="row form-group bg-gray">
@@ -134,6 +140,14 @@
             </div>
             <div class="col-lg-9">
                 <input id="making_date" name="date" type="date" value={{todays_date}} />
+            </div>
+        </div>
+        <div class="row bg-silver">
+            <div class="col-lg-3">
+                <h4>Comments</h4>
+            </div>
+            <div class="col-lg-9">
+                <textarea id="making_comment" name="comment" rows="5" cols="50"></textarea>
             </div>
         </div>
         <div class="row bg-silver">
@@ -209,6 +223,11 @@
     </div>
 
     </div>
+    <script>
+    function generete_comment_url(id){
+        return "{% url 'get_comments' 112233 %}".replace("112233", id);
+    }
+    </script>
     <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'js/index.js' %}"></script>

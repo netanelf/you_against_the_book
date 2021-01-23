@@ -1,3 +1,4 @@
+from django.views.generic.list import ListView
 from django.shortcuts import render
 from django.db.models import Count, Avg
 from django.db.models import Max, Min
@@ -11,6 +12,20 @@ from yotams_race.models import *
 # Create your views here.
 
 
+def get_comments(request, recipe_id):
+    model = Comment
+    print(f'in get_comments, request: {request}, recipe_id id: {recipe_id}')
+    fields = '__all__'
+    r = Recipe.objects.get(pk=recipe_id)
+    print(f'resolved recipe: {r}')
+    return render(request, 'yotams_race/comment_list.html')
+    # def form_valid(self, form):
+    #     print(form)
+    #     self.object = form.save()
+    #     return render(self.request, 'news/news_create_success.html', {'news': self.object})
+
+
+
 def get_completion_data():
     number_of_made_recipes = Making.objects.values('recipe').distinct().count()
     number_of_recipes = Recipe.objects.count()
@@ -22,12 +37,14 @@ def get_completion_data():
 def get_top_10_recipes():
     makings = Recipe.objects.annotate(num_makings=Count('making'),
                                       avg_rank=Avg('making__score'),
-                                      avg_effort=Avg('making__effort')).order_by('-num_makings', '-avg_rank', '-avg_effort')
+                                      avg_effort=Avg('making__effort'),
+                                      ).order_by('-num_makings', '-avg_rank', '-avg_effort')
     top_10 = makings[:10]
     data = [{'name': v.name,
              'num_makings': v.num_makings,
              'average_rank': v.avg_rank,
-             'average_effort': v.avg_effort} for v in top_10]
+             'average_effort': v.avg_effort,
+             'id': v.id} for v in top_10]
     return data
 
 
@@ -117,7 +134,12 @@ def add_new_making(request):
     timestamp = datetime.strptime(data[1] + ' 12:00:00', '%Y-%m-%d %H:%M:%S')
     score = float(data[2])
     effort = float(data[3])
+    comment = data[4]
+    print(f'comment: {comment}')
     making = Making(recipe=r, timestamp=timestamp, score=score, effort=effort)
     making.save()
+    if comment != '':
+        comment = Comment(timestamp=timestamp, recipe=r, comment=comment)
+        comment.save()
     return HttpResponse(json.dumps({'no_data': None}))
 
