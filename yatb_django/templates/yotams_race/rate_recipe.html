@@ -1,0 +1,99 @@
+{% extends 'yotams_race/base.html' %}
+
+{% load static %}
+
+{% block title %}{{ 'index page' }}{% endblock %}
+
+{% block rate_active_class %} active {% endblock %}
+
+{% block body_block %}
+<body>
+    <div class="bg">
+
+    <div class="container bg-light-gray">
+        <!-- add done recipe div-->
+        <div class="row form-group bg-gray">
+            <div class="col-lg-12">
+                <h1 align="center">Report a making of a recipe</h1>
+            </div>
+        </div>
+        <div class="row bg-silver">
+            <br>
+            <div class="col-lg-3">
+                <h4>Choose a recipe from this list</h4>
+            </div>
+            <div class="col-lg-9">
+                <select class="selectpicker" data-live-search="true" id="recipes_chooser" data-width="auto">
+                    <option data-tokens="" selected>Please select</option>
+                    {% for r in full_recipes_list %}
+                        <option>{{r}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row bg-silver">
+            <div class="col-lg-3">
+                <h4>Rate the recipe</h4>
+            </div>
+            <div class="col-lg-9">
+                <input id="rating_input" name="rating_input" class="rating rating-loading" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1">
+            </div>
+        </div>
+        <div class="row bg-silver">
+            <div class="col-lg-3">
+                <h4>Rate the effort (0: low effort)</h4>
+            </div>
+            <div class="col-lg-9">
+                <input id="effort_input" name="effort_input" class="rating rating-loading" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1">
+            </div>
+        </div>
+        <div class="row bg-silver">
+            <div class="col-lg-3">
+                <h4>Choose making date</h4>
+            </div>
+            <div class="col-lg-9">
+                <input id="making_date" name="date" type="date" value={{todays_date}} />
+            </div>
+        </div>
+        <div class="row bg-silver">
+            <div class="col-lg-3">
+                <h4>Comments</h4>
+            </div>
+            <div class="col-lg-9">
+                <textarea id="making_comment" name="comment" rows="5" cols="50"></textarea>
+            </div>
+        </div>
+        <div class="row bg-silver">
+            <div class="col-lg-12 text-center">
+                <button type="button" class="btn btn-secondary" id="add_done_recipe">Add done recipe</button>
+                <br>
+                <br>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-lg-12">
+                <div class="alert alert-success" id="success-alert">
+                    <strong>Success! </strong> Recipe added successfully
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    </div>
+
+
+</body>
+{% endblock %}
+
+{% block footer_block %}
+    <script src="{% static 'js/rate_recipe.js' %}"></script>
+{% endblock %}
+
+{% block script_block %}
+{% endblock %}
+
+
+

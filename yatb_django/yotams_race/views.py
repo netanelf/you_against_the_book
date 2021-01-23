@@ -68,6 +68,33 @@ def index(request):
     return render(request, 'yotams_race/index.html', data)
 
 
+def rate_recipe(request):
+    data = \
+        {
+            'full_recipes_list': get_full_recipes_list(),
+            'todays_date': date.today().strftime('%Y-%m-%d')
+        }
+    return render(request, 'yotams_race/rate_recipe.html', data)
+
+
+def making_list(request):
+    making = Making.objects.all()
+    makings_list = []
+    for m in making:
+        makings_list.append({
+            'name': m.recipe.name,
+            'page': m.recipe.page_num,
+            'rank': m.score,
+            'effort': m.effort,
+            'date': m.timestamp
+        })
+
+    data = \
+        {
+            'all_makings': makings_list
+        }
+    return render(request, 'yotams_race/making_list.html', data)
+
 def full_making_table(request):
     making = Making.objects.all()
     makings_list = []

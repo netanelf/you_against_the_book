@@ -1,0 +1,56 @@
+{% extends 'yotams_race/base.html' %}
+
+{% load static %}
+
+{% block title %}{{ 'index page' }}{% endblock %}
+
+{% block making_list_active_class %} active {% endblock %}
+
+{% block body_block %}
+<body>
+    <link href="{% static 'css/dataTables.bootstrap.css' %}" rel="stylesheet" media="screen">
+    <div class="bg">
+        <div class="container bg-light-gray">
+            <div class="row bg-silver"> <!-- random recipe-->
+                <div class="col-lg-12">
+                    <table class="table table-striped" id="full_making_table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Page</th>
+                                <th scope="col">Rank</th>
+                                <th scope="col">Effort</th>
+                                <th scope="col">Making Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for r in all_makings %}
+                            <tr>
+                                <td scope="row">{{r.name}}</td>
+                                <td>{{r.page}}</td>
+                                <td>{{r.rank|floatformat:2}}</td>
+                                <td>{{r.effort|floatformat:2}}</td>
+                                <td>{{r.date|date:'Y-m-d'}}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+{% endblock %}
+
+{% block footer_block %}
+    <script src="{% static 'js/full_making_table.js' %}"></script>
+    <script src="{% static 'js/datatables.js' %}"></script>
+    <script src="{% static 'js/dataTables.bootstrap.js' %}"></script>
+{% endblock %}
+
+{% block script_block %}
+{% endblock %}
+
+
+

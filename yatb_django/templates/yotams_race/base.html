@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+{% load static %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'css/bootstrap-toggle.css' %}" rel="stylesheet" media="screen">
+    <link rel="icon" type="image/png"href="{% static 'pics/favicon.png' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="{% static 'css/bootstrap-select.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'css/star-rating.css' %}" rel="stylesheet" media="screen">
+
+    <title>{% block title%} Our Recipe Book{% endblock%}</title>
+
+    <style>
+      .bold {
+        font-weight: bold;
+      }
+
+      .indent {
+        margin-left: 1.5em;
+      }
+
+
+       .bold {
+            font-weight: bold;
+        }
+
+        .indent {
+            margin-left: 1.5em;
+        }
+
+        .col-container {
+            display: flex;
+            width: 100%;
+        }
+        .col {
+            flex: 1;
+            padding: 16px;
+        }
+
+        .bg-light-gray   { background-color: rgba(208, 211, 212, 0.9)  }
+        .bg-gray   { background-color: rgba(170, 170, 170, 0.9) }
+        .bg-silver { background-color: rgba(221, 221, 221, 0.7) }
+        .bg-purple { background-color: rgba(165, 105, 189, 0.7) }
+
+        body, html {
+            height: 100%;
+        }
+        .bg {
+            /* The image used */
+            background-image: url("{% static "images/plenty_bg.jpg" %}");
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            background-size: cover;
+            -o-background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">Our Recipe Book</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="{% block index_active_class %}{% endblock %}"><a href="{% url 'index' %}">Yotams Race</a></li>
+            <li class="{% block rate_active_class %}{% endblock %}"><a href="{% url 'rate_recipe' %}">Rate a Recipe</a></li>
+            <li class="{% block making_list_active_class %}{% endblock %}"><a href="{% url 'making_list' %}">Making List</a></li>
+            <li class=""><a href="{% url 'admin:index' %}">Admin</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="starter-template">
+          {% block body_block %}{% endblock %}
+      </div>
+    </div><!-- /.container -->
+
+    <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/bootstrap-select.js' %}"></script>
+    <script src="{% static 'js/star-rating.js' %}"></script>
+
+    {% block footer_block %}{% endblock %}
+            <!-- footer-->
+        <div class="row form-group bg-gray">
+            <div class="col-lg-12">
+                <address>
+                    <br>
+                    <strong>Netanel Freiman, 2020</strong>
+                    <br>
+                    2020
+                    <br>Jerusalem
+                </address>
+            </div>
+        </div>
+    <script>
+        {% block script_block %}{% endblock %}
+    </script>
+</body>
+</html>

@@ -1,50 +1,10 @@
-<!DOCTYPE html>
+{% extends 'yotams_race/base.html' %}
+
 {% load static %}
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
-    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" media="screen">
-    <link href="{% static 'css/bootstrap-select.css' %}" rel="stylesheet" media="screen">
-    <link href="{% static 'css/star-rating.css' %}" rel="stylesheet" media="screen">
-    <title>{% block title%} Yotam's Race {% endblock%}</title>
+{% block title %}{{ 'index page' }}{% endblock %}
 
-    <style>
-        .bold {
-            font-weight: bold;
-        }
-
-        .indent {
-            margin-left: 1.5em;
-        }
-
-        .col-container {
-            display: flex;
-            width: 100%;
-        }
-        .col {
-            flex: 1;
-            padding: 16px;
-        }
-
-        .bg-light-gray   { background-color: rgba(208, 211, 212, 0.9)  }
-        .bg-gray   { background-color: rgba(170, 170, 170, 0.9) }
-        .bg-silver { background-color: rgba(221, 221, 221, 0.7) }
-        .bg-purple { background-color: rgba(165, 105, 189, 0.7) }
-
-        body, html {
-            height: 100%;
-        }
-        .bg {
-            /* The image used */
-            background-image: url("{% static "images/plenty_bg.jpg" %}");
-            -webkit-background-size: cover;
-            -moz-background-size: cover;
-            background-size: cover;
-            -o-background-size: cover;
-        }
-    </style>
-</head>
+{% block index_active_class %} active {% endblock %}
 
 {% block body_block %}
 <body>
@@ -62,7 +22,7 @@
         <!-- top 10 div-->
         <div class="row form-group bg-gray">
             <div class="col-lg-12">
-                <h1 align="center" data-toggle="tooltip" data-placement="top" title="Full making table"><a href="full_making_table">Top 10</a></h1>
+                <h1 align="center" data-toggle="tooltip" data-placement="top" title="Full making table">Top 10</h1>
             </div>
         </div>
         <div class="row form-group bg-silver">
@@ -97,74 +57,6 @@
 
         {% comment %}3 - The modal container{% endcomment %}
         <div class="modal fade" id="modal"></div>
-
-        <!-- add done recipe div-->
-        <div class="row form-group bg-gray">
-            <div class="col-lg-12">
-                <h1 align="center">Report a making of a recipe</h1>
-            </div>
-        </div>
-        <div class="row bg-silver">
-            <br>
-            <div class="col-lg-3">
-                <h4>Choose a recipe from this list</h4>
-            </div>
-            <div class="col-lg-9">
-                <select class="selectpicker" data-live-search="true" id="recipes_chooser" data-width="auto">
-                    <option data-tokens="" selected>Please select</option>
-                    {% for r in full_recipes_list %}
-                        <option>{{r}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-        <div class="row bg-silver">
-            <div class="col-lg-3">
-                <h4>Rate the recipe</h4>
-            </div>
-            <div class="col-lg-9">
-                <input id="rating_input" name="rating_input" class="rating rating-loading" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1">
-            </div>
-        </div>
-        <div class="row bg-silver">
-            <div class="col-lg-3">
-                <h4>Rate the effort (0: low effort)</h4>
-            </div>
-            <div class="col-lg-9">
-                <input id="effort_input" name="effort_input" class="rating rating-loading" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1">
-            </div>
-        </div>
-        <div class="row bg-silver">
-            <div class="col-lg-3">
-                <h4>Choose making date</h4>
-            </div>
-            <div class="col-lg-9">
-                <input id="making_date" name="date" type="date" value={{todays_date}} />
-            </div>
-        </div>
-        <div class="row bg-silver">
-            <div class="col-lg-3">
-                <h4>Comments</h4>
-            </div>
-            <div class="col-lg-9">
-                <textarea id="making_comment" name="comment" rows="5" cols="50"></textarea>
-            </div>
-        </div>
-        <div class="row bg-silver">
-            <div class="col-lg-12 text-center">
-                <button type="button" class="btn btn-secondary" id="add_done_recipe">Add done recipe</button>
-                <br>
-                <br>
-            </div>
-        </div>
-        <div class="row form-group">
-            <div class="col-lg-12">
-                <div class="alert alert-success" id="success-alert">
-                    <strong>Success! </strong> Recipe added successfully
-                </div>
-            </div>
-        </div>
-
 
         <!-- get random recipe div-->
         <div class="row form-group bg-gray">
@@ -223,18 +115,20 @@
     </div>
 
     </div>
-    <script>
-    function generete_comment_url(id){
-        return "{% url 'get_comments' 112233 %}".replace("112233", id);
-    }
-    </script>
-    <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.js' %}"></script>
-    <script src="{% static 'js/index.js' %}"></script>
-    <script src="{% static 'js/bootstrap-select.js' %}"></script>
-    <script src="{% static 'js/star-rating.js' %}"></script>
+
+
 
 </body>
 {% endblock %}
-</html>
+
+{% block footer_block %}
+    <script src="{% static 'js/index.js' %}"></script>
+{% endblock %}
+
+{% block script_block %}
+    function generete_comment_url(id){
+        return "{% url 'get_comments' 112233 %}".replace("112233", id);
+    }
+{% endblock %}
+
 
