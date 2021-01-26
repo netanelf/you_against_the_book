@@ -3,18 +3,18 @@ window.onload = function(){
     var get_random_recipe = document.getElementById('get_rand_recipe');
     get_random_recipe.onclick = updateRandomRecipe;
 
-    $('#modal').on('show.bs.modal', function (event) {
-        var modal = $(this)
+    $('#comments_modal').on('show.bs.modal', function (event) {
+        var modal = $(this);
+        var modal_inner_data = $('#comments_modal_inner_data');
+        var button = $(event.relatedTarget);
+        var recipient = button.data('pk');
         $.ajax({
-            //url: 'get_comments/3',
-            url: generete_comment_url(3),
+            url: generate_comment_url(recipient),
             context: document.body,
-            //data: JSON.stringify(['only_unmade', only_unmade], null, 2),
         }).done(function(response) {
-            modal.html(response);
+            modal_inner_data.html(response);
         });
     })
-
 }
 
 
@@ -50,6 +50,7 @@ function updateRandomRecipe(event, data){
         success: onDataReceived
     });
 }
+
 
 
 

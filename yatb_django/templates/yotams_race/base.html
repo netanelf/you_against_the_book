@@ -73,7 +73,7 @@
           <ul class="nav navbar-nav">
             <li class="{% block index_active_class %}{% endblock %}"><a href="{% url 'index' %}">Yotams Race</a></li>
             <li class="{% block rate_active_class %}{% endblock %}"><a href="{% url 'rate_recipe' %}">Rate a Recipe</a></li>
-            <li class="{% block making_list_active_class %}{% endblock %}"><a href="{% url 'making_list' %}">Making List</a></li>
+            <li class="{% block recipe_list_active_class %}{% endblock %}"><a href="{% url 'recipe_list' %}">Recipe List</a></li>
             <li class=""><a href="{% url 'admin:index' %}">Admin</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -81,9 +81,16 @@
     </nav>
 
     <div class="container">
-      <div class="starter-template">
-          {% block body_block %}{% endblock %}
-      </div>
+        <div class="starter-template">
+            {% block body_block %}{% endblock %}
+
+            <!-- /.container for modal popups that get their content from an ajax call-->
+            <div class="modal fade" id="comments_modal">
+                <div id="comments_modal_inner_data">
+
+                </div>
+            </div>
+        </div>
     </div><!-- /.container -->
 
     <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
@@ -106,6 +113,19 @@
         </div>
     <script>
         {% block script_block %}{% endblock %}
+        function generate_comment_url(id){
+            return "{% url 'get_comments' 112233 %}".replace("112233", id);
+        }
+
+        function show_comments(id){
+            $.ajax({
+                url: generete_comment_url(id),
+                context: document.body,
+            }).done(function(response) {
+                    //modal.html(response);
+                    $("#myModal").html(response);
+            });
+        }
     </script>
 </body>
 </html>

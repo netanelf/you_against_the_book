@@ -22,7 +22,7 @@
         <!-- top 10 div-->
         <div class="row form-group bg-gray">
             <div class="col-lg-12">
-                <h1 align="center" data-toggle="tooltip" data-placement="top" title="Full making table">Top 10</h1>
+                <h1 align="center" data-toggle="tooltip" data-placement="top">Top 10</h1>
             </div>
         </div>
         <div class="row form-group bg-silver">
@@ -46,7 +46,9 @@
                             <td class="col-md-2">{{r.average_rank|floatformat:2}}</td>
                             <td class="col-md-2">{{r.average_effort|floatformat:2}}</td>
                             <td class="col-md-2">
-                                <p>Click <a data-toggle="modal" data-target="#modal" href="{% url 'get_comments' recipe_id=r.id %}">here</a> to show the modal</p>
+                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#comments_modal" data-pk={{r.id}}>
+                                    <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+                                </button>
                             </td>
                         </tr>
                         {% endfor %}
@@ -55,8 +57,7 @@
             </div>
         </div>
 
-        {% comment %}3 - The modal container{% endcomment %}
-        <div class="modal fade" id="modal"></div>
+
 
         <!-- get random recipe div-->
         <div class="row form-group bg-gray">
@@ -126,9 +127,6 @@
 {% endblock %}
 
 {% block script_block %}
-    function generete_comment_url(id){
-        return "{% url 'get_comments' 112233 %}".replace("112233", id);
-    }
 {% endblock %}
 
 

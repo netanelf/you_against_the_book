@@ -1,4 +1,3 @@
-from django.views.generic.list import ListView
 from django.shortcuts import render
 from django.db.models import Count, Avg
 from django.db.models import Max, Min
@@ -13,17 +12,12 @@ from yotams_race.models import *
 
 
 def get_comments(request, recipe_id):
-    model = Comment
-    print(f'in get_comments, request: {request}, recipe_id id: {recipe_id}')
-    fields = '__all__'
     r = Recipe.objects.get(pk=recipe_id)
-    print(f'resolved recipe: {r}')
-    return render(request, 'yotams_race/comment_list.html')
-    # def form_valid(self, form):
-    #     print(form)
-    #     self.object = form.save()
-    #     return render(self.request, 'news/news_create_success.html', {'news': self.object})
-
+    comments = Comment.objects.filter(recipe=r)
+    data = dict()
+    data['recipe_name'] = r.name
+    data['comments'] = comments
+    return render(request, 'yotams_race/comment_list.html', data)
 
 
 def get_completion_data():
@@ -62,7 +56,6 @@ def index(request):
     {
         'completed_percent': get_completion_data(),
         'top_10': get_top_10_recipes(),
-        'full_recipes_list': get_full_recipes_list(),
         'todays_date': date.today().strftime('%Y-%m-%d')
     }
     return render(request, 'yotams_race/index.html', data)
@@ -77,41 +70,25 @@ def rate_recipe(request):
     return render(request, 'yotams_race/rate_recipe.html', data)
 
 
-def making_list(request):
-    making = Making.objects.all()
-    makings_list = []
-    for m in making:
-        makings_list.append({
-            'name': m.recipe.name,
-            'page': m.recipe.page_num,
-            'rank': m.score,
-            'effort': m.effort,
-            'date': m.timestamp
-        })
-
+def recipe_list(request):
+    recipes = Recipe.objects.all()
+    recipe_list = []
+    for r in recipes:
+        recipe_list.append(
+            {
+                'name': r.name,
+                'source': r.recipe_source,
+                'page': r.page_num,
+                'link': r.link,
+                'num_of_comments': Comment.objects.filter(recipe=r).count(),
+                'id': r.id
+            }
+        )
     data = \
         {
-            'all_makings': makings_list
+            'all_recipes': recipe_list
         }
-    return render(request, 'yotams_race/making_list.html', data)
-
-def full_making_table(request):
-    making = Making.objects.all()
-    makings_list = []
-    for m in making:
-        makings_list.append({
-            'name': m.recipe.name,
-            'page': m.recipe.page_num,
-            'rank': m.score,
-            'effort': m.effort,
-            'date': m.timestamp
-        })
-
-    data = \
-        {
-            'all_makings': makings_list
-        }
-    return render(request, 'yotams_race/full_making_table.html', data)
+    return render(request, 'yotams_race/recipe_list.html', data)
 
 
 def get_random_recipe(request):

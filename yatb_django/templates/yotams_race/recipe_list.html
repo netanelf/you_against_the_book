@@ -17,20 +17,27 @@
                         <thead>
                             <tr>
                                 <th scope="col">Name</th>
+                                <th scope="col">Source</th>
                                 <th scope="col">Page</th>
-                                <th scope="col">Rank</th>
-                                <th scope="col">Effort</th>
-                                <th scope="col">Making Date</th>
+                                <th scope="col">Link</th>
+                                <th scope="col">Comments</th>
                             </tr>
                         </thead>
                         <tbody>
-                        {% for r in all_makings %}
+                        {% for r in all_recipes %}
                             <tr>
                                 <td scope="row">{{r.name}}</td>
+                                <td>{{r.source}}</td>
                                 <td>{{r.page}}</td>
-                                <td>{{r.rank|floatformat:2}}</td>
-                                <td>{{r.effort|floatformat:2}}</td>
-                                <td>{{r.date|date:'Y-m-d'}}</td>
+                                <td>{{r.link|urlize}}</td>
+                                <td>
+                                    {% if r.num_of_comments > 0 %}
+                                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#comments_modal" data-pk={{r.id}}>
+                                        <span class="glyphicon glyphicon-comment" aria-hidden="true"></span> {{r.num_of_comments}}
+                                    </button>
+                                    {% else %}
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -50,6 +57,18 @@
 {% endblock %}
 
 {% block script_block %}
+    $('#comments_modal').on('show.bs.modal', function (event) {
+        var modal = $(this);
+        var modal_inner_data = $('#comments_modal_inner_data');
+        var button = $(event.relatedTarget);
+        var recipient = button.data('pk');
+        $.ajax({
+            url: generate_comment_url(recipient),
+            context: document.body,
+        }).done(function(response) {
+            modal_inner_data.html(response);
+        });
+    })
 {% endblock %}
 
 
