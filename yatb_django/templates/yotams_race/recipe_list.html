@@ -1,0 +1,77 @@
+{% extends 'yotams_race/base.html' %}
+
+{% load static %}
+
+{% block title %}{{ 'index page' }}{% endblock %}
+
+{% block making_list_active_class %} active {% endblock %}
+
+{% block body_block %}
+<body>
+    <link href="{% static 'css/dataTables.bootstrap.css' %}" rel="stylesheet" media="screen">
+    <div class="bg">
+        <div class="container bg-light-gray">
+            <div class="row bg-silver"> <!-- random recipe-->
+                <div class="col-lg-12">
+                    <table class="table table-striped" id="full_making_table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Source</th>
+                                <th scope="col">Page</th>
+                                <th scope="col">Link</th>
+                                <th scope="col">#Makes</th>
+                                <th scope="col">Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for r in all_recipes %}
+                            <tr>
+                                <td scope="row">{{r.name}}</td>
+                                <td>{{r.source}}</td>
+                                <td>{{r.page}}</td>
+                                <td>{{r.link|urlize}}</td>
+                                <td>{{r.num_of_making}}</td>
+                                <td>
+                                    {% if r.num_of_comments > 0 %}
+                                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#comments_modal" data-pk={{r.id}}>
+                                        <span class="glyphicon glyphicon-comment" aria-hidden="true"></span> {{r.num_of_comments}}
+                                    </button>
+                                    {% else %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+{% endblock %}
+
+{% block footer_block %}
+    <script src="{% static 'js/full_making_table.js' %}"></script>
+    <script src="{% static 'js/datatables.js' %}"></script>
+    <script src="{% static 'js/dataTables.bootstrap.js' %}"></script>
+{% endblock %}
+
+{% block script_block %}
+    $('#comments_modal').on('show.bs.modal', function (event) {
+        var modal = $(this);
+        var modal_inner_data = $('#comments_modal_inner_data');
+        var button = $(event.relatedTarget);
+        var recipient = button.data('pk');
+        $.ajax({
+            url: generate_comment_url(recipient),
+            context: document.body,
+        }).done(function(response) {
+            modal_inner_data.html(response);
+        });
+    })
+{% endblock %}
+
+
+

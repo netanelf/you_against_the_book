@@ -1,0 +1,21 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">{{recipe_name}} Comments</h3>
+    </div>
+    <div class="modal-body">
+      <div class="list-group">
+        {% for c in comments %}
+        <div class="list-group-item flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <h4 class="mb-1">{{c.timestamp}}</h4>
+          </div>
+          <p class="mb-1">{{c.comment}}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="modal-footer">
+    </div>
+  </div>
+</div>

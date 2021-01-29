@@ -1,19 +1,78 @@
 from django.shortcuts import render
 from django.db.models import Count, Avg
 from django.db.models import Max, Min
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+
 from datetime import date, datetime
 import json
 import random
 
 from yotams_race.models import *
+from yotams_race.forms import RecipeForm, SourceForm, MakingForm
 
 # Create your views here.
 
 
+def add_recipe(request):
+    if request.method == 'POST':
+        form = RecipeForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('operations'))
+
+    else:
+        form = RecipeForm()
+
+    return render(request, 'yotams_race/add_recipe.html', {'form': form})
+
+
+def add_source(request):
+    if request.method == 'POST':
+        form = SourceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('operations'))
+
+    else:
+        form = SourceForm()
+
+    return render(request, 'yotams_race/add_source.html', {'form': form})
+
+
+def add_making(request):
+    if request.method == 'POST':
+        form = MakingForm(request.POST)
+        if form.is_valid():
+            r = Recipe.objects.get(pk=form.data['recipe'])
+            c = Comment(recipe=r, timestamp=form.data['timestamp'], comment=form.data['comment'])
+            c.save()
+            form.save()
+            return HttpResponseRedirect(reverse('operations'))
+        else:
+            print(f'form not valid!, form: {form}')
+    else:
+        form = MakingForm()
+    return render(request, 'yotams_race/add_making.html', {'form': form,
+                                                           'full_recipes_list': get_full_recipes_list(),
+                                                           'todays_date': date.today().strftime('%Y-%m-%d')
+                                                           })
+
+
+def get_comments(request, recipe_id):
+    r = Recipe.objects.get(pk=recipe_id)
+    comments = Comment.objects.filter(recipe=r)
+    data = dict()
+    data['recipe_name'] = r.name
+    data['comments'] = comments
+    return render(request, 'yotams_race/comment_list.html', data)
+
+
 def get_completion_data():
-    number_of_made_recipes = Making.objects.values('recipe').distinct().count()
-    number_of_recipes = Recipe.objects.count()
+    plenty_source = Source.objects.get(name='Yotam Ottolemghi, Plenty')
+    number_of_made_recipes = Making.objects.values('recipe').filter(recipe__recipe_source=plenty_source).values('recipe').distinct().count()
+    number_of_recipes = Recipe.objects.filter(recipe_source=plenty_source).count()
     percent = (number_of_made_recipes / number_of_recipes) * 100
     data = {'percent': percent, 'number_of_recipes': number_of_recipes, 'number_of_made_recipes': number_of_made_recipes}
     return data
@@ -22,18 +81,20 @@ def get_completion_data():
 def get_top_10_recipes():
     makings = Recipe.objects.annotate(num_makings=Count('making'),
                                       avg_rank=Avg('making__score'),
-                                      avg_effort=Avg('making__effort')).order_by('-num_makings', '-avg_rank', '-avg_effort')
+                                      avg_effort=Avg('making__effort'),
+                                      ).order_by('-num_makings', '-avg_rank', '-avg_effort')
     top_10 = makings[:10]
     data = [{'name': v.name,
              'num_makings': v.num_makings,
              'average_rank': v.avg_rank,
-             'average_effort': v.avg_effort} for v in top_10]
+             'average_effort': v.avg_effort,
+             'id': v.id} for v in top_10]
     return data
 
 
 def get_full_recipes_list():
     recipes = Recipe.objects.all()
-    l = [r.name for r in recipes]
+    l = [{'name': r.name, 'id': r.id} for r in recipes]
     return l
 
 
@@ -41,33 +102,45 @@ def index(request):
     """
     main view for home page
     """
+    print('index view')
     data = \
     {
         'completed_percent': get_completion_data(),
         'top_10': get_top_10_recipes(),
-        'full_recipes_list': get_full_recipes_list(),
         'todays_date': date.today().strftime('%Y-%m-%d')
     }
     return render(request, 'yotams_race/index.html', data)
 
 
-def full_making_table(request):
-    making = Making.objects.all()
-    makings_list = []
-    for m in making:
-        makings_list.append({
-            'name': m.recipe.name,
-            'page': m.recipe.page_num,
-            'rank': m.score,
-            'effort': m.effort,
-            'date': m.timestamp
-        })
-
+def operations(request):
+    print('in operations')
     data = \
         {
-            'all_makings': makings_list
+            'todays_date': date.today().strftime('%Y-%m-%d')
         }
-    return render(request, 'yotams_race/full_making_table.html', data)
+    return render(request, 'yotams_race/operations.html', data)
+
+
+def recipe_list(request):
+    recipes = Recipe.objects.all()
+    recipe_list = []
+    for r in recipes:
+        recipe_list.append(
+            {
+                'name': r.name,
+                'source': r.recipe_source,
+                'page': r.page_num,
+                'link': r.link,
+                'num_of_comments': Comment.objects.filter(recipe=r).count(),
+                'num_of_making': r.making_set.count(),
+                'id': r.id
+            }
+        )
+    data = \
+        {
+            'all_recipes': recipe_list
+        }
+    return render(request, 'yotams_race/recipe_list.html', data)
 
 
 def get_random_recipe(request):
@@ -117,7 +190,12 @@ def add_new_making(request):
     timestamp = datetime.strptime(data[1] + ' 12:00:00', '%Y-%m-%d %H:%M:%S')
     score = float(data[2])
     effort = float(data[3])
+    comment = data[4]
+    print(f'comment: {comment}')
     making = Making(recipe=r, timestamp=timestamp, score=score, effort=effort)
     making.save()
+    if comment != '':
+        comment = Comment(timestamp=timestamp, recipe=r, comment=comment)
+        comment.save()
     return HttpResponse(json.dumps({'no_data': None}))
 

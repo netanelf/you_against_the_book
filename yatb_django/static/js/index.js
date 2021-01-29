@@ -3,9 +3,18 @@ window.onload = function(){
     var get_random_recipe = document.getElementById('get_rand_recipe');
     get_random_recipe.onclick = updateRandomRecipe;
 
-    var add_done_recipe = document.getElementById('add_done_recipe');
-    add_done_recipe.onclick = addDoneRecipe;
-
+    $('#comments_modal').on('show.bs.modal', function (event) {
+        var modal = $(this);
+        var modal_inner_data = $('#comments_modal_inner_data');
+        var button = $(event.relatedTarget);
+        var recipient = button.data('pk');
+        $.ajax({
+            url: generate_comment_url(recipient),
+            context: document.body,
+        }).done(function(response) {
+            modal_inner_data.html(response);
+        });
+    })
 }
 
 
@@ -43,32 +52,7 @@ function updateRandomRecipe(event, data){
 }
 
 
-function addDoneRecipe(event, data){
-
-    var recipe_name_e = document.getElementById('recipes_chooser');
-    var recipe_making_date_e = document.getElementById('making_date');
-    var recipe_rating_e = document.getElementById("rating_input")
-    var recipe_effort_e = document.getElementById("effort_input")
-
-    function onDataReceived(){
-        console.log('updated site with new making');
-        showAlert();
-    }
-
-    $.ajax({
-        url: 'add_new_making/',
-        type: 'GET',
-        dataType: 'json',
-        data: JSON.stringify([recipe_name_e.value, recipe_making_date_e.value, recipe_rating_e.value, recipe_effort_e.value], null, 2),
-        success: onDataReceived
-    });
-}
 
 
-function showAlert() {
-    $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
-        $("#success-alert").slideUp(500);
-        });
-}
 
 
