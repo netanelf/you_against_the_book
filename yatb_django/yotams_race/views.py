@@ -70,7 +70,7 @@ def get_comments(request, recipe_id):
 
 
 def get_completion_data():
-    plenty_source = Source.objects.get(name='Yotam Ottolemghi, Plenty')
+    plenty_source = Source.objects.get(name='Yotam Ottolenghi, Plenty')
     number_of_made_recipes = Making.objects.values('recipe').filter(recipe__recipe_source=plenty_source).values('recipe').distinct().count()
     number_of_recipes = Recipe.objects.filter(recipe_source=plenty_source).count()
     percent = (number_of_made_recipes / number_of_recipes) * 100
