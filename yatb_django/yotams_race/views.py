@@ -79,10 +79,12 @@ def get_completion_data():
 
 
 def get_top_10_recipes():
-    makings = Recipe.objects.annotate(num_makings=Count('making'),
-                                      avg_rank=Avg('making__score'),
-                                      avg_effort=Avg('making__effort'),
-                                      ).order_by('-num_makings', '-avg_rank', '-avg_effort')
+    plenty_source = Source.objects.get(name='Yotam Ottolenghi, Plenty')
+    makings = Recipe.objects.filter(recipe_source=plenty_source).annotate(
+        num_makings=Count('making'),
+        vg_rank=Avg('making__score'),
+        avg_effort=Avg('making__effort'),
+    ).order_by('-num_makings', '-avg_rank', '-avg_effort')
     top_10 = makings[:10]
     data = [{'name': v.name,
              'num_makings': v.num_makings,
