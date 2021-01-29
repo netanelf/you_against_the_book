@@ -1,0 +1,25 @@
+
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Add Source</h3>
+    </div>
+    <div class="modal-body">
+    <form action="{% url 'add_source' %}" method="post">
+    {% csrf_token %}
+          {% for field in form %}
+      <div class="fieldWrapper form-group" aria-required={% if field.field.required %}"true"{% else %}"false"{% endif %}>
+          {{ field.label_tag }}{% if field.field.required %}<span class="required">*</span>{% endif %}
+          {{ field }}
+          {% if field.help_text %}
+          <p class="help">{{ field.help_text|safe }}</p>
+          {% endif %}
+      </div>
+      {% endfor %}
+    <input type="submit" value="Submit">
+    </form>
+    </div>
+    <div class="modal-footer">
+    </div>
+  </div>
+</div>

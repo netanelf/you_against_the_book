@@ -1,14 +1,63 @@
 from django.shortcuts import render
 from django.db.models import Count, Avg
 from django.db.models import Max, Min
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+
 from datetime import date, datetime
 import json
 import random
 
 from yotams_race.models import *
+from yotams_race.forms import RecipeForm, SourceForm, MakingForm
 
 # Create your views here.
+
+
+def add_recipe(request):
+    if request.method == 'POST':
+        form = RecipeForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('operations'))
+
+    else:
+        form = RecipeForm()
+
+    return render(request, 'yotams_race/add_recipe.html', {'form': form})
+
+
+def add_source(request):
+    if request.method == 'POST':
+        form = SourceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('operations'))
+
+    else:
+        form = SourceForm()
+
+    return render(request, 'yotams_race/add_source.html', {'form': form})
+
+
+def add_making(request):
+    if request.method == 'POST':
+        form = MakingForm(request.POST)
+        if form.is_valid():
+            r = Recipe.objects.get(pk=form.data['recipe'])
+            c = Comment(recipe=r, timestamp=form.data['timestamp'], comment=form.data['comment'])
+            c.save()
+            form.save()
+            return HttpResponseRedirect(reverse('operations'))
+        else:
+            print(f'form not valid!, form: {form}')
+    else:
+        form = MakingForm()
+    return render(request, 'yotams_race/add_making.html', {'form': form,
+                                                           'full_recipes_list': get_full_recipes_list(),
+                                                           'todays_date': date.today().strftime('%Y-%m-%d')
+                                                           })
 
 
 def get_comments(request, recipe_id):
@@ -21,8 +70,9 @@ def get_comments(request, recipe_id):
 
 
 def get_completion_data():
-    number_of_made_recipes = Making.objects.values('recipe').distinct().count()
-    number_of_recipes = Recipe.objects.count()
+    plenty_source = Source.objects.get(name='Yotam Ottolemghi, Plenty')
+    number_of_made_recipes = Making.objects.values('recipe').filter(recipe__recipe_source=plenty_source).values('recipe').distinct().count()
+    number_of_recipes = Recipe.objects.filter(recipe_source=plenty_source).count()
     percent = (number_of_made_recipes / number_of_recipes) * 100
     data = {'percent': percent, 'number_of_recipes': number_of_recipes, 'number_of_made_recipes': number_of_made_recipes}
     return data
@@ -44,7 +94,7 @@ def get_top_10_recipes():
 
 def get_full_recipes_list():
     recipes = Recipe.objects.all()
-    l = [r.name for r in recipes]
+    l = [{'name': r.name, 'id': r.id} for r in recipes]
     return l
 
 
@@ -52,6 +102,7 @@ def index(request):
     """
     main view for home page
     """
+    print('index view')
     data = \
     {
         'completed_percent': get_completion_data(),
@@ -61,13 +112,13 @@ def index(request):
     return render(request, 'yotams_race/index.html', data)
 
 
-def rate_recipe(request):
+def operations(request):
+    print('in operations')
     data = \
         {
-            'full_recipes_list': get_full_recipes_list(),
             'todays_date': date.today().strftime('%Y-%m-%d')
         }
-    return render(request, 'yotams_race/rate_recipe.html', data)
+    return render(request, 'yotams_race/operations.html', data)
 
 
 def recipe_list(request):
@@ -81,6 +132,7 @@ def recipe_list(request):
                 'page': r.page_num,
                 'link': r.link,
                 'num_of_comments': Comment.objects.filter(recipe=r).count(),
+                'num_of_making': r.making_set.count(),
                 'id': r.id
             }
         )

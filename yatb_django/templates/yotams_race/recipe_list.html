@@ -20,6 +20,7 @@
                                 <th scope="col">Source</th>
                                 <th scope="col">Page</th>
                                 <th scope="col">Link</th>
+                                <th scope="col">#Makes</th>
                                 <th scope="col">Comments</th>
                             </tr>
                         </thead>
@@ -30,6 +31,7 @@
                                 <td>{{r.source}}</td>
                                 <td>{{r.page}}</td>
                                 <td>{{r.link|urlize}}</td>
+                                <td>{{r.num_of_making}}</td>
                                 <td>
                                     {% if r.num_of_comments > 0 %}
                                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#comments_modal" data-pk={{r.id}}>
