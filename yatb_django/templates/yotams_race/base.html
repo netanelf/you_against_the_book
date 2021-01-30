@@ -50,16 +50,73 @@
             height: 100%;
         }
         .bg {
-            /* The image used */
-            background-image: url("{% static "images/plenty_bg.jpg" %}");
-            -webkit-background-size: cover;
-            -moz-background-size: cover;
-            background-size: cover;
-            -o-background-size: cover;
+            background:url("{% static "images/plenty_bg.jpg" %}");
+            background-size:cover;
+
+            /* Workaround for some mobile browsers */
+            min-height:100%;
+            padding-top: 20px;
+            padding-bottom: 20px;
         }
+
+ /* Sticky footer styles
+      -------------------------------------------------- */
+
+      html,
+      body {
+        height: 100%;
+        /* The html and body elements cannot have any padding or margin. */
+      }
+
+      /* Wrapper for page content to push down footer */
+      #wrap {
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        /* Negative indent footer by it's height */
+        margin: 0 auto -60px;
+      }
+
+      /* Set the fixed height of the footer here */
+      #push,
+      #footer {
+        height: 100px;
+      }
+      #footer {
+        background-color: rgba(170, 170, 170, 0.9);
+      }
+
+      /* Lastly, apply responsive CSS fixes as necessary */
+      @media (max-width: 767px) {
+        #footer {
+          margin-left: -20px;
+          margin-right: -20px;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+      }
+
+
+
+      /* Custom page CSS
+      -------------------------------------------------- */
+      /* Not required for template or sticky footer method. */
+
+      #wrap > .container {
+        padding-top: 60px;
+      }
+      .container .credit {
+        margin: 20px 0;
+      }
+
+      code {
+        font-size: 80%;
+      }
+
     </style>
 </head>
 <body>
+<div class="bg">
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -92,7 +149,7 @@
             </div>
         </div>
     </div><!-- /.container -->
-
+</div>
     <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'js/bootstrap-select.js' %}"></script>
@@ -100,17 +157,20 @@
 
     {% block footer_block %}{% endblock %}
             <!-- footer-->
-        <div class="row form-group bg-gray">
-            <div class="col-lg-12">
+    <div id="footer">
+        <div class="container">
+            <p class="muted credit">
+
                 <address>
-                    <br>
                     <strong>Netanel Freiman, 2020</strong>
                     <br>
                     2020
                     <br>Jerusalem
                 </address>
-            </div>
+
+            </p>
         </div>
+    </div>
     <script>
         {% block script_block %}{% endblock %}
         function generate_comment_url(id){

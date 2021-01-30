@@ -30,7 +30,12 @@
                                 <td scope="row">{{r.name}}</td>
                                 <td>{{r.source}}</td>
                                 <td>{{r.page}}</td>
-                                <td>{{r.link|urlize}}</td>
+                                <td>
+                                    {% if r.link != None%}
+                                        <a href="{{r.link}}">link</a>
+                                    {% else %}
+                                    {% endif %}
+                                </td>
                                 <td>{{r.num_of_making}}</td>
                                 <td>
                                     {% if r.num_of_comments > 0 %}

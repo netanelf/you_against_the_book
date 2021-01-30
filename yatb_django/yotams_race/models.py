@@ -21,7 +21,7 @@ class Recipe(models.Model):
     page_num = models.IntegerField(blank=True, null=True)
     recipe_source = models.ForeignKey(Source, on_delete=models.CASCADE)
     link = models.URLField(
-        max_length=128,
+        max_length=255,
         blank=True,
         null=True
     )

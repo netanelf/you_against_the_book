@@ -90,6 +90,7 @@ def get_top_10_recipes():
              'num_makings': v.num_makings,
              'average_rank': v.avg_rank,
              'average_effort': v.avg_effort,
+             'num_of_comments': Comment.objects.filter(recipe=v).count(),
              'id': v.id} for v in top_10]
     return data
 
